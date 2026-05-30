@@ -1,3 +1,4 @@
+🇷🇺 Русская версия документации — README.ru.md
 # Decache
 Decache is a specialized web cache scanner for Windows XP+. All items are reliably compared against metadata for pieces of lost media, with a focus on deleted YouTube videos.
 

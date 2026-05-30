@@ -1,19 +1,20 @@
 @rem This program only works on Windows XP and up
 cls
 @echo off
+chcp 1251 >nul
 ver | find " 4." > nul
 if not errorlevel 1 (
   echo:
-  echo   Decache
-  echo   Easy cache extractor
+  echo   Decache (русская версия)
+  echo   Простой извлекатель кэша
   echo:
-  echo   Support @ sindexmon.github.io/decache/
+  echo   Поддержка: sindexmon.github.io/decache/
   echo:
-  echo It appears that you're using a computer from the 90s. Decache is not compatible with your operating system.
-  echo Some tips to get you started:
-  echo - Try backing up the computer to a USB, or cloning the hard drive entirely.
-  echo - Run this program on said backup using a computer that runs Windows XP or higher.
-  echo - If this computer is still running on its original hard drive, it probably won't work for much longer.
+  echo Похоже, вы используете компьютер из 90-х. Decache несовместим с вашей ОС.
+  echo Несколько советов для начала:
+  echo - Попробуйте скопировать компьютер на USB или клонировать диск целиком.
+  echo - Запустите программу на этой резервной копии с компьютера под Windows XP или новее.
+  echo - Если этот компьютер всё ещё работает на оригинальном жёстком диске, он, вероятно, прослужит недолго.
   echo:
   pause
   exit
@@ -39,9 +40,8 @@ if not errorlevel 1 (
 
 findstr >nul 2>nul
 if %errorlevel% == 9009 (
-  echo Decache is unable to run because your computer is missing 'findstr.exe'. This might be because you're doing some awesome work-around for your broken PC and are running it from the terminal in recovery mode. If so, hell yeah!
-  echo:
-  echo If you experience this error, please report it.
+  echo Decache не может работать, так как на вашем компьютере отсутствует 'findstr.exe'. Возможно, это потому, что вы используете какой-то крутой обходной путь для своего сломанного компьютера и запускаете его из терминала в режиме восстановления. Если так, то это просто замечательно!  echo:
+  echo Если вы столкнулись с этой ошибкой, пожалуйста, сообщите о ней.
   echo:
   pause
   exit /b 0
@@ -68,7 +68,7 @@ net session >nul 2>nul
 if %errorlevel% == 0 (
   set isAdmin=1
   if not exist "%~dp0" (
-    echo Decache is unable to run as administrator. This is because of issues regarding a folder preceding it.
+    echo Decache не может работать с правами администратора из-за проблем с папкой, предшествующей ему.
     echo:
     echo Look for any folder with a percentage sign in the name ^(e.g. %%1, %%errorlevel%%^), or anything wrapped up in exclamation marks ^(e.g. ^^!errorlevel^^!^). Try changing these names, and try again.
     echo:
@@ -81,7 +81,7 @@ if %errorlevel% == 0 (
 setlocal enabledelayedexpansion
 
 if not exist "bin" (
-  echo Be sure to fully extract the ZIP file before running^^!^^!^^!
+  echo Перед запуском обязательно полностью распакуйте ZIP-архив^^!^^!^^!
   pause
   exit /b 0
 )
@@ -100,7 +100,7 @@ for %%x in (%*) do (
     if "!newArg:~9,1!" neq "" if "!newArg:~9,1!" lss "3" set SILENCE_ERRORS=!newArg:~9,1!
 
     if "!SILENCE_ERRORS!" == "0" if "!newArg:~9,1!" neq "0" (
-      echo Invalid silence type "!newArg:~9,1!"
+      echo Неверный тип подавления ошибок "!newArg:~9,1!"
       pause
       exit /b 0
     )
@@ -371,7 +371,7 @@ goto main
   )
 
   :endHashComp
-  echo compared^^!
+  echo сравнено^^!
   exit /b 0
 
 :: Checks if a file is a valid video file, then compares it against lost video data
@@ -512,7 +512,7 @@ goto main
   
   if exist "!scanDir1!" (
     cls
-    echo Scanning folder "!scanDir1!"
+    echo Сканируем папку "!scanDir1!"
     
     pushd "nirsoft"
     set "BASE=..\.."
@@ -972,7 +972,7 @@ echo oops there's some parsing issue!!
   set identifier=
   set publicCred=
   set sendVideos=
-  for /f "tokens=* delims=" %%z in ('cscript /nologo "bin\vbs\askforname.vbs" "!verifiedFiles!" "!numVideos!"') do (
+  for /f "tokens=* delims=" %%z in ('cscript /nologo "bin\vbs\askserver.vbs" "!verifiedFiles!" "!numVideos!"') do (
     if "!identifier!" == "" (
       set "identifier=%%z"
     ) else (
@@ -1033,8 +1033,46 @@ echo oops there's some parsing issue!!
     cls
   )
 
+  del "!BASE!\bin\raw_contents.txt" >nul 2>nul
+  type "!BASE!\Verified\credit.txt" >> "!BASE!\bin\raw_contents.txt" 2>nul
+  echo CONTENTS>> "!BASE!\bin\raw_contents.txt" 2>nul
+  type "!BASE!\Verified\contents.txt" >> "!BASE!\bin\raw_contents.txt" 2>nul
+  echo FILENAMES>> "!BASE!\bin\raw_contents.txt" 2>nul
+  dir /b "!BASE!\Verified" >> "!BASE!\bin\raw_contents.txt" 2>nul
+  echo CACHED>> "!BASE!\bin\raw_contents.txt" 2>nul
+  type "!BASE!\Verified\cached_ids.txt" >> "!BASE!\bin\raw_contents.txt" 2>nul
+
   if "!identifier!" neq "" (
-    for /f %%z in ('cscript /nologo "bin\vbs\nointernet.vbs" "!verifiedFiles!" "!fixedName!"') do if "%%z" == "6" explorer "https://sindexmon.github.io/decache/"
+    :retryConnection
+    ping google.com -n 1 >nul 2>nul
+    if !errorlevel! == 1 (
+      for /f %%z in ('cscript /nologo "bin\vbs\nointernet.vbs" "!verifiedFiles!"') do if "%%z" == "1" goto retryConnection
+    ) else (
+      echo Uploading files ^(this may take a while^)...
+      
+      set urlProvided=0
+
+      for /f "tokens=* delims=" %%s in ('call "bin\curl.exe" -X POST -s -k --retry 1 --data-binary "@!BASE!\bin\raw_contents.txt" -H "x-API-Key: upload" https://upload.decache.workers.dev/upload') do (
+        if "%%s" neq "nothing 2 see here" (
+          set urlProvided=1
+          set "uploadURL=%%s"
+          echo !uploadURL!> "!BASE!\bin\variables\url.var"
+          for /f %%z in ('cscript /nologo "!BASE!\bin\vbs\regex.vbs" "[^^\w\:\-\./\?\=\&\%%\n\r]" "!BASE!\bin\variables\url.var" 1') do set "uploadURL="
+          echo url = "!uploadURL!"> "!BASE!\bin\curl.cfg"
+        )
+      )
+      
+      if "!urlProvided!" == "1" (
+        set statusCode=
+        for /f "tokens=* delims=" %%s in ('call "bin\curl.exe" -X PUT -o nul -w "%%{http_code}" -s -k --retry 1 --data-binary "@!fixedName!" -K "!BASE!\bin\curl.cfg"') do (
+          set "statusCode=%%s"
+        )
+
+        if "!statusCode!" neq "200" (
+          for /f %%z in ('cscript /nologo "bin\vbs\nointernet.vbs" "!verifiedFiles!"') do if "%%z" == "1" goto retryConnection
+        )
+      )
+    )
   )
 
   if "!unverifiedFiles!" neq "0" cscript /nologo "bin\vbs\likely_alert.vbs" "!unverifiedFiles!"
