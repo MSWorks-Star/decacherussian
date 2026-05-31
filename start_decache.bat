@@ -22,17 +22,17 @@ if not errorlevel 1 (
 
 ver | find " 5.0" > nul
 if not errorlevel 1 (
+ echo:
+  echo   Decache (русская версия)
+  echo   Простой извлекатель кэша
   echo:
-  echo   Decache
-  echo   Easy cache extractor
+  echo   Поддержка: sindexmon.github.io/decache/
   echo:
-  echo   Support @ sindexmon.github.io/decache/
-  echo:
-  echo It appears that you're using Windows 2000. Decache is not compatible with your operating system.
-  echo Some tips to get you started:
-  echo - Try backing up the computer to a USB, or cloning the hard drive entirely.
-  echo - Run this program on said backup using a computer that runs Windows XP or higher.
-  echo - If this computer is still running on its original hard drive, it probably won't work for much longer.
+  echo Похоже, вы используете компьютер на Windows 2000. Decache несовместим с вашей ОС.
+  echo Несколько советов для начала:
+  echo - Попробуйте скопировать компьютер на USB или клонировать диск целиком.
+  echo - Запустите программу на этой резервной копии с компьютера под Windows XP или новее.
+  echo - Если этот компьютер всё ещё работает на оригинальном жёстком диске, он, вероятно, прослужит недолго.
   echo:
   pause
   exit
@@ -70,7 +70,7 @@ if %errorlevel% == 0 (
   if not exist "%~dp0" (
     echo Decache не может работать с правами администратора из-за проблем с папкой, предшествующей ему.
     echo:
-    echo Look for any folder with a percentage sign in the name ^(e.g. %%1, %%errorlevel%%^), or anything wrapped up in exclamation marks ^(e.g. ^^!errorlevel^^!^). Try changing these names, and try again.
+    echo Найдите любую папку, в названии которой есть знак процента ^(e.g. %%1, %%errorlevel%%^), или что-либо, обёрнутое в восклицательные знаки ^(e.g. ^^!errorlevel^^!^). Попробуйте изменить эти имена и попробуйте снова.
     echo:
     pause
     exit /b 0
@@ -864,14 +864,14 @@ echo oops there's some parsing issue!!
 
   if "!driveArg!" == "" (
     echo:
-    echo   Decache
-    echo   Easy cache extractor
+    echo   DecacheRussian
+    echo   Простой извлекатель кэша
     echo:
-    echo   Support @ sindexmon.github.io/decache/
+    echo   Поддержка @ sindexmon.github.io/decache/
     echo:
-    echo Some points to get you started:
-    echo - Verified assets will be copied into "Assets.zip".
-    echo - Unverified assets require manual verification.
+    echo Несколько советов, с чего начать:
+    echo - Проверенные видео будут скопированы в архив "Assets.zip"..
+    echo - Непроверенные активы требуют ручной проверки.
     echo:
     pause >nul | set /p =Press any key to select a computer . . .
     echo:
@@ -1079,20 +1079,20 @@ echo oops there's some parsing issue!!
 
   cls
 
-  echo Thank you for using Decache^^!
+  echo Спасибо вам за использование DecacheRussian^^!
   echo:
-  echo For further information, please see the website:
+  echo Для большей информации, пожалуйста ознакомьтесь по ссылке:
   echo sindexmon.github.io/decache/
   echo:
   
   if "!unverifiedFiles!" neq "0" (
     if "!unverifiedFiles!" == "1" (
-      echo To watch your !unverifiedFiles! unverified video, you'll have to open them using VLC Media Player.
+      echo Чтобы посмотреть !unverifiedFiles! неподтвержденное видео, вам нужно открыть используя VLC Media Player.
     ) else (
-      echo To watch your !unverifiedFiles! unverified videos, you'll have to open them using VLC Media Player.
+      echo Чтобы посмотреть !unverifiedFiles! неподтвержденное видео, вам нужно открыть используя VLC Media Player.
     )
 
-    echo If you already have VLC installed, the videos will open automatically.
+    echo Если у вас VLC уже установлен, то видео автоматически откроется.
     echo:
 
     pause >nul | set /p =Press any key to exit . . .
